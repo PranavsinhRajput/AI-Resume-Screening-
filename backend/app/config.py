@@ -19,9 +19,8 @@ class Settings(BaseSettings):
     GEMINI_MIN_INTERVAL_SECONDS: float = 4.0
     GEMINI_TIMEOUT_SECONDS: float = 60.0
 
-    EMBEDDING_MODEL: str = "BAAI/bge-small-en-v1.5"
-    EMBEDDING_DIM: int = 384
-    EMBEDDING_CACHE_DIR: str = "./.model_cache"
+    # Embedding via gemini-embedding-001 (Google API, no local model required)
+    EMBEDDING_DIM: int = 768
 
     FRONTEND_ORIGINS: str = "https://ai-resume-screening-lovat.vercel.app"
 

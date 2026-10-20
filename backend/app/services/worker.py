@@ -28,12 +28,13 @@ async def requeue_stale(client: Client, settings: Settings) -> None:
 
 async def run_worker(client: Client, settings: Settings, stop: asyncio.Event) -> None:
     await requeue_stale(client, settings)
+    # GeminiEmbedder is lightweight to construct (no model download); get once at startup.
+    embedder = get_default_embedder()
     logger.info("Worker started")
     while not stop.is_set():
         try:
             row = await anyio.to_thread.run_sync(resumes_repo.claim_next, client)
             if row:
-                embedder = await anyio.to_thread.run_sync(get_default_embedder)
                 await process_resume(
                     row, client=client, settings=settings, llm=get_default_llm(), embedder=embedder
                 )
