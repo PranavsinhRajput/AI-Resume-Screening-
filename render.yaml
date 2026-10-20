@@ -4,12 +4,12 @@ services:
     runtime: python
     plan: free
     rootDir: backend
-    buildCommand: pip install -r requirements.txt && python scripts/download_embedding_model.py
+    buildCommand: pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt && python scripts/download_embedding_model.py
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
     envVars:
       - key: PYTHON_VERSION
-        value: "3.12"
+        value: "3.12.8"
       - key: ENV
         value: production
       - key: SUPABASE_URL
@@ -19,7 +19,7 @@ services:
       - key: GEMINI_API_KEY
         sync: false
       - key: GEMINI_MODEL
-        value: gemini-2.5-flash
+        value: gemini-3.5-flash-lite
       - key: FRONTEND_ORIGINS
         sync: false
       - key: EMBEDDING_CACHE_DIR
