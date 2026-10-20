@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
-import { MailCheck } from 'lucide-react'
 import { useAuth } from '../context/AuthContext.jsx'
 import Button from '../components/ui/Button.jsx'
 import AuthLayout, { Field } from './AuthLayout.jsx'
@@ -14,9 +13,9 @@ export default function SignupPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
-  const [confirmSent, setConfirmSent] = useState(false)
 
-  if (session && !confirmSent) return <Navigate to="/resumes" replace />
+  // Already logged in → go straight to the app (ProtectedRoute handles pending/rejected state)
+  if (session) return <Navigate to="/resumes" replace />
 
   const onSubmit = async (e) => {
     e.preventDefault()
@@ -27,31 +26,15 @@ export default function SignupPage() {
     }
     setBusy(true)
     try {
-      const { needsConfirmation } = await signUp(email.trim(), password)
-      if (needsConfirmation) setConfirmSent(true)
-      else navigate('/resumes', { replace: true })
+      await signUp(email.trim(), password)
+      // Supabase auto-confirms the user and returns a session immediately.
+      // ProtectedRoute will show PendingApprovalPage until the admin approves.
+      navigate('/resumes', { replace: true })
     } catch (err) {
       setError(err?.message || 'Could not sign up.')
     } finally {
       setBusy(false)
     }
-  }
-
-  if (confirmSent) {
-    return (
-      <AuthLayout title="Check your email">
-        <div role="status" className="flex items-start gap-3 text-sm text-text">
-          <MailCheck className="h-6 w-6 shrink-0 text-accent" aria-hidden="true" />
-          <p>Check your email to confirm your account. Then come back and log in.</p>
-        </div>
-        <Link
-          to="/login"
-          className="mt-6 inline-block font-medium text-accent-strong underline-offset-2 hover:underline"
-        >
-          Go to login
-        </Link>
-      </AuthLayout>
-    )
   }
 
   return (

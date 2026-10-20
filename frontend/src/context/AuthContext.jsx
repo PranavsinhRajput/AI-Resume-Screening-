@@ -7,7 +7,7 @@ import { supabase } from '../lib/supabase.js'
  * @property {import('@supabase/supabase-js').User|null} user
  * @property {boolean} loading
  * @property {(email: string, password: string) => Promise<void>} signIn
- * @property {(email: string, password: string) => Promise<{needsConfirmation: boolean}>} signUp
+ * @property {(email: string, password: string) => Promise<void>} signUp
  * @property {() => Promise<void>} signOut
  */
 
@@ -40,9 +40,10 @@ export function AuthProvider({ children }) {
   }, [])
 
   const signUp = useCallback(async (email, password) => {
-    const { data, error } = await supabase.auth.signUp({ email, password })
+    // Email confirmation is disabled in Supabase; signUp returns a session immediately.
+    // The user lands on PendingApprovalPage until an admin approves the account.
+    const { error } = await supabase.auth.signUp({ email, password })
     if (error) throw error
-    return { needsConfirmation: !data.session }
   }, [])
 
   const signOut = useCallback(async () => {
