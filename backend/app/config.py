@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     SUPABASE_SERVICE_ROLE_KEY: str = ""
 
     GEMINI_API_KEY: str = ""
-    GEMINI_MODEL: str = "gemini-2.5-flash"
+    GEMINI_MODEL: str = "gemini-3.5-flash-lite"
     GEMINI_MAX_CONCURRENCY: int = 2
     GEMINI_MIN_INTERVAL_SECONDS: float = 4.0
     GEMINI_TIMEOUT_SECONDS: float = 60.0
@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     EMBEDDING_DIM: int = 384
     EMBEDDING_CACHE_DIR: str = "./.model_cache"
 
-    FRONTEND_ORIGINS: str = "http://localhost:5173"
+    FRONTEND_ORIGINS: str = "https://ai-resume-screening-lovat.vercel.app"
 
     MAX_FILE_MB: float = 1.0
     MAX_FILES_PER_UPLOAD: int = 20

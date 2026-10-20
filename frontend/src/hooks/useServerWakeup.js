@@ -24,7 +24,7 @@ export function useServerWakeup() {
 
     const attempt = async () => {
       const controller = new AbortController()
-      const abortTimer = setTimeout(() => controller.abort(), 15000)
+      const abortTimer = setTimeout(() => controller.abort(), 60000)
       try {
         await api.health(controller.signal)
         if (cancelled) return
