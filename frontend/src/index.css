@@ -1,0 +1,63 @@
+@import "tailwindcss";
+@import "./styles/theme.css";
+
+/* Tailwind's dark: variant follows the data-theme attribute, not the OS setting. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/*
+ * Register the Harvest Orange tokens with Tailwind so utilities like bg-app, text-muted, border-line,
+ * bg-accent and shadow-soft exist. The light values here are only defaults; the unlayered rules in
+ * styles/theme.css (including [data-theme="dark"]) win at runtime, so theme switching works.
+ */
+@theme {
+  --color-harvest-orange-50: hsl(27.7 100% 94.9%);
+  --color-harvest-orange-100: hsl(28.2 100% 90%);
+  --color-harvest-orange-200: hsl(28.2 100% 80%);
+  --color-harvest-orange-300: hsl(27.8 100% 70%);
+  --color-harvest-orange-400: hsl(27.9 100% 60%);
+  --color-harvest-orange-500: hsl(28 100% 50%);
+  --color-harvest-orange-600: hsl(27.9 100% 40%);
+  --color-harvest-orange-700: hsl(27.8 100% 30%);
+  --color-harvest-orange-800: hsl(28.2 100% 20%);
+  --color-harvest-orange-900: hsl(28.2 100% 10%);
+  --color-harvest-orange-950: hsl(28.3 100% 7.1%);
+
+  --color-app: hsl(32 45% 97%);
+  --color-panel: hsl(0 0% 100%);
+  --color-elevated: hsl(30 33% 98%);
+  --color-sidebar: hsl(27.7 100% 94.9%);
+  --color-text: hsl(222 24% 14%);
+  --color-muted: hsl(221 10% 42%);
+  --color-line: hsl(28.2 100% 90%);
+  --color-accent: hsl(28 100% 50%);
+  --color-accent-strong: hsl(27.9 100% 40%);
+  --color-soft-accent: hsl(28.2 100% 90%);
+  --shadow-soft: 0 18px 45px rgba(60, 36, 16, 0.1);
+  --shadow-button: 0 14px 26px rgba(255, 119, 0, 0.24);
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-app);
+  color: var(--color-text);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Visible focus ring in both themes */
+:focus-visible {
+  outline: 2px solid var(--color-accent-strong);
+  outline-offset: 2px;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

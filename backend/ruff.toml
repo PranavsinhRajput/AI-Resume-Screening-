@@ -1,0 +1,11 @@
+target-version = "py312"
+line-length = 120
+
+[lint]
+select = ["E", "F", "W", "I", "B", "UP", "ASYNC"]
+# B008: FastAPI's Depends()/Query() defaults. UP046/UP047: keep TypeVar generics (pydantic-friendly).
+ignore = ["B008", "UP046", "UP047"]
+
+[lint.per-file-ignores]
+# Prompt text is kept verbatim from architecture.md.
+"app/prompts/*" = ["E501"]

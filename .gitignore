@@ -1,0 +1,91 @@
+# =====================================================================
+# Resume Screening AI — files that must never be committed
+# =====================================================================
+
+# ---------- Secrets / environment (NEVER commit these) ----------
+# Real keys live in backend/.env (service-role + Gemini) and frontend/.env (anon key).
+.env
+.env.*
+*.env
+# ...but DO commit the templates
+!.env.example
+!**/.env.example
+
+# ---------- Python (backend) ----------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+backend/venv/
+# Packaging / build
+build/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+# Tool caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Downloaded embedding model (~63 MB; re-downloaded by scripts/download_embedding_model.py)
+backend/.model_cache/
+.model_cache/
+
+# ---------- Node (frontend) ----------
+node_modules/
+frontend/dist/
+dist/
+dist-ssr/
+*.local
+.vite/
+.eslintcache
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---------- Deployment tooling ----------
+.vercel/
+.render/
+
+# ---------- Logs & temp ----------
+logs/
+*.log
+*.tmp
+*.temp
+tmp/
+
+# ---------- Test fixtures that may contain real personal data ----------
+# Unit tests generate their PDFs at runtime; keep real resumes out of git.
+backend/tests/fixtures/*.pdf
+
+# ---------- Claude Code local settings ----------
+.claude/settings.local.json
+
+# ---------- OS files ----------
+.DS_Store
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ---------- Editors / IDEs ----------
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace

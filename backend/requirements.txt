@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+python-multipart
+pydantic
+pydantic-settings
+supabase
+google-genai
+pymupdf
+fastembed
+numpy
+tenacity
+cachetools
+httpx
+anyio

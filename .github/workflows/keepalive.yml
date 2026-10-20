@@ -1,0 +1,22 @@
+name: keepalive
+
+# Supabase free projects pause after a week of inactivity. This wakes the Render backend and
+# touches the database twice a week.
+on:
+  schedule:
+    - cron: "0 6 * * 1,4"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping backend /health/db
+        env:
+          BACKEND_URL: ${{ secrets.BACKEND_URL }}
+        run: |
+          for i in 1 2 3; do
+            curl -fsS --max-time 90 "$BACKEND_URL/health/db" && exit 0
+            sleep 20
+          done
+          exit 1
