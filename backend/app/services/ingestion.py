@@ -16,7 +16,7 @@ from app.repositories import chunks as chunks_repo
 from app.repositories import resumes as resumes_repo
 from app.repositories import storage as storage_repo
 from app.services.chunking import build_chunks
-from app.services.embeddings import Embedder
+from app.services.embeddings import Embedder, EmbeddingError
 from app.services.experience import compute_experience
 from app.services.extraction import extract_resume
 from app.services.llm import LLMGateway, LLMInvalidOutput, LLMUnavailable
@@ -30,6 +30,7 @@ MSG_AI_BUSY = "AI service busy. Please retry."
 MSG_BAD_LAYOUT = "Could not understand this resume's layout."
 MSG_GENERIC = "Processing failed. Please retry."
 MSG_FILE_MISSING = "The PDF file could not be loaded. Please delete and upload it again."
+MSG_EMBEDDING_BUSY = "Embedding service busy. Please retry."
 
 
 class ProcessingFailed(Exception):
@@ -56,7 +57,8 @@ async def process_resume(
         logger.info("Resume %s failed: %s", resume_id, exc.user_message)
         await _mark_failed(client, owner_id, resume_id, exc.user_message)
     except Exception as exc:
-        logger.error("Resume %s failed unexpectedly: %s", resume_id, type(exc).__name__)
+        # exc_info=exc prints the full traceback so the root cause is always visible in logs
+        logger.error("Resume %s failed unexpectedly: %s", resume_id, type(exc).__name__, exc_info=exc)
         await _mark_failed(client, owner_id, resume_id, MSG_GENERIC)
 
 
@@ -161,9 +163,12 @@ async def _process(
     # 9. Chunks + embeddings
     chunks = build_chunks(extraction, skills, text)
     if chunks:
-        vectors = await anyio.to_thread.run_sync(
-            embedder.embed_passages, [c["content"] for c in chunks]
-        )
+        try:
+            vectors = await anyio.to_thread.run_sync(
+                embedder.embed_passages, [c["content"] for c in chunks]
+            )
+        except EmbeddingError as exc:
+            raise ProcessingFailed(MSG_EMBEDDING_BUSY) from exc
         await anyio.to_thread.run_sync(
             chunks_repo.insert_chunks, client, owner_id, resume_id, chunks, vectors
         )
